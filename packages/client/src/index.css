@@ -1,0 +1,202 @@
+@import 'tailwindcss';
+
+/*
+ * ─────────────────────────────────────────────────────────────────────────
+ * STREAM — quiet, editorial, premium. Linear/Vercel restraint. Monochrome
+ * luxury: near-black canvas, off-white ink, silver/white accent (no blue, no
+ * orange). Color is carried by the Three.js hero centerpiece, not the UI.
+ * Glass surfaces, generous negative space, hairline rules.
+ * Display: Libre Caslon Text. Text/UI: Manrope.
+ * ─────────────────────────────────────────────────────────────────────────
+ */
+@theme {
+  --font-display: 'Libre Caslon Text', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Manrope', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Canvas + ink (near-black, faint cool neutral) */
+  --color-paper: #070708;
+  --color-panel: #0f0f12;
+  --color-paper-2: #17171b;
+  --color-ink: #f4f4f6;
+  --color-ink-soft: #9a9aa3;
+  --color-ink-faint: #5e5e67;
+  --color-line: #1b1b1f;
+  --color-line-strong: #2c2c33;
+
+  /* Monochrome base accent (white is the primary action color) */
+  --color-signal: #f4f4f6;
+  --color-signal-deep: #d6d6db;
+  /* Single chromatic accent — refined emerald, used only for secure/live cues */
+  --color-mint: #54d6a6;
+  --color-mint-deep: #2bbd8a;
+  --color-positive: #54d6a6;
+  --color-danger: #f0686a;
+
+  --radius-card: 16px;
+}
+
+/* Back-compat aliases for any surface still referencing older names. */
+:root {
+  --color-canvas: var(--color-paper);
+  --color-surface: var(--color-panel);
+  --color-surface-2: var(--color-paper-2);
+  --color-border: var(--color-line);
+  --color-ink-muted: var(--color-ink-soft);
+  --color-ink-subtle: var(--color-ink-faint);
+  --color-accent: var(--color-signal);
+  --color-accent-2: var(--color-signal);
+  --color-success: var(--color-positive);
+  --color-cobalt: var(--color-signal);
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    /* Native, snappy scrolling; smooth only for in-page anchor jumps. */
+    scroll-behavior: smooth;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    letter-spacing: -0.005em;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Whisper-quiet film grain for depth. */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  }
+
+  /* Soft cinematic glow, top-center. */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: radial-gradient(1000px 560px at 50% -14%, rgba(255, 255, 255, 0.06), transparent 72%);
+  }
+
+  #root {
+    position: relative;
+    z-index: 1;
+  }
+
+  ::selection {
+    background: rgba(255, 255, 255, 0.22);
+    color: #fff;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  *:focus-visible {
+    outline: 1.5px solid var(--color-signal);
+    outline-offset: 3px;
+  }
+
+  /* Respect users who prefer reduced motion. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+
+  /* No visible scrollbars — Lenis handles smooth scrolling. */
+  * {
+    scrollbar-width: none;
+  }
+  *::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+}
+
+/* ── Utilities ─────────────────────────────────────────────────── */
+
+/* Small uppercase Manrope label / eyebrow. */
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.rule {
+  border: none;
+  border-top: 1px solid var(--color-line);
+}
+
+/* Glass surface — the premium card treatment (no blur: keeps scroll smooth). */
+.glass {
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/* Soft edge-fade mask for the WebGL canvas so it dissolves into the page. */
+.fade-mask {
+  -webkit-mask-image: radial-gradient(ellipse 70% 65% at 50% 45%, #000 55%, transparent 82%);
+  mask-image: radial-gradient(ellipse 70% 65% at 50% 45%, #000 55%, transparent 82%);
+}
+
+/* Slow, organic drift for the hero's ambient light blobs. */
+@keyframes float-slow {
+  0%, 100% { transform: translate(0, 0); }
+  33% { transform: translate(2.5%, -3.5%); }
+  66% { transform: translate(-3%, 2%); }
+}
+.animate-float-slow {
+  animation: float-slow 16s ease-in-out infinite;
+}
+.animate-float-slower {
+  animation: float-slow 22s ease-in-out infinite reverse;
+}
+
+.serif {
+  font-family: var(--font-display);
+}
+.serif-italic {
+  font-family: var(--font-display);
+  font-style: italic;
+}
+
+/* Quiet animated underline for links. */
+.link-ul {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.link-ul:hover {
+  background-size: 100% 1px;
+}
